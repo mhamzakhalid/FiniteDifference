@@ -4,7 +4,6 @@ clear
     test = 'Poisson1D 3_1';
    %  test = 'Poisson1D 3_2';
    % test = 'Poisson1D 3_3';
-load 'ref.mat'
 %% Initial Values
 M_h = 14;
 % M = 14;
