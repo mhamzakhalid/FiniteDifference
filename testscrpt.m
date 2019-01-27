@@ -1,18 +1,21 @@
 clear
-clc
+
 %% Cases
- %   test = 'Poisson1D 2(f)1';
-%   test = 'Poisson1D 2(f)2';
-%   test = 'Poisson1D 2(f)3';
+    %test = 'Poisson1D 2(f)1';
+   % test = 'Poisson1D 2(f)2';
+   test = 'Poisson1D 2(f)3';
 
 %% Initial Values
-M_h = 14;
+M_h = 10;
 for M = 2:M_h
-    h = 1/2^M;
-    u = zeros(2^M-1,1);
-    e = ones(2^M-1,1);
-    A = spdiags([-e./h^2 2*e/h^2 -e/h^2],-1:1,2^M-1,2^M-1);
+    h0=.1;
+    h = h0/2^M;
+    %h = 3.0518e-05;
     x = 0:h:1;
+    u = zeros(length(x)-2,1);
+    e = ones(length(x)-2,1);
+    A = spdiags([-e./h^2 2*e/h^2 -e/h^2],-1:1,length(x)-2,length(x)-2);
+    
 
     %% Boundary and exact solution
     switch test
@@ -21,46 +24,62 @@ for M = 2:M_h
             exact = @(x) sin(pi.*x)./pi^2;
             rhs = f(x);
             u_exact = exact(x); 
-            boundary = zeros(2^M-1,1);
+            boundary = zeros(length(x)-2,1);
         case 'Poisson1D 2(f)2'
             f = @(x) 1./x;
             exact = @(x) -x.*log(x)+ x;
             rhs = f(x);
             u_exact = exact(x); 
             alpha = 0.;
-            beta  = 1.;
-            boundary = zeros(2^M-1,1);
-            boundary(1) = 0.;
-            boundary(end) = 1./h^2;
-        case 'Poisson1D 3'
-            f = @(x) sin(pi.*x);
-            exact = @(x) -x.*log(x)+ x;
+            beta  = 1./h^2;
+            boundary = zeros(length(x)-2,1);
+            boundary(1) = alpha;
+            boundary(end) = beta;
+        case 'Poisson1D 2(f)3'
+            f = @(x) cos(pi*x);
+            exact = @(x) (2.*x - 1 + cos(pi.*x))./pi^2;
             rhs = f(x);
             u_exact = exact(x); 
-            alpha = 0.;
-            beta  = 1.;
-            boundary = zeros(2^M-1,1);
-            boundary(1) = 0.;
-            boundary(end) = 1./h^2;
+            alpha = 0;
+            beta  = 0;
+            boundary = zeros(length(x)-2,1);
+            boundary(1) = alpha;
+            boundary(end) = beta;
     end
 
     %% Solving the problem
     switch test
         case 'Poisson1D 2(f)1'
-           u = pcg(A,rhs(2:2^M)'+boundary);
-           error(M) = norm(u - u_exact(2:2^M)');
+           F = rhs(2:end-1)'+ boundary;
+           u = A\F;
+           % u = pcg(A,rhs(2:2^M)'+boundary);
+           error(M) = norm(u - u_exact(2:end-1)');
         case 'Poisson1D 2(f)2'
-            F = rhs(2:2^M)'+ boundary;
+            F = rhs(2:end-1)'+ boundary;
             u = A\F;
            %u = pcg(A,rhs(2:2^M)'+boundary);
-           error(M) = norm(u - u_exact(2:2^M)'); 
+           error(M) = norm(u - u_exact(2:end-1)'); 
+        case 'Poisson1D 2(f)3'
+            F = rhs(2:end-1)'+ boundary;
+            u = A\F;
+            error(M) = norm(u - u_exact(2:end-1)'); 
+
     end
 end
 
 %% Visualization
 m = 1:M_h;
-H = 1./2.^m;
-loglog(H,error)
+H = h0./2.^m;
+p = polyfit(H,error,5);
+f = polyval(p,H);
+switch test
+    case 'Poisson1D 2(f)1'
+        loglog(H,error,'-*')
+    case 'Poisson1D 2(f)2'
+        loglog(H,error,'-o')
+    case 'Poisson1D 2(f)3'
+        loglog(H,error,'-+')
+end
 hold on
 axis('equal')
 grid on
