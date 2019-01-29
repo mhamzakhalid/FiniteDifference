@@ -1,15 +1,20 @@
 clear
 
+%%% Uncomment the TASK to RUN! %%%
+%%%%************************ %%%%%
+%%%%%********************** %%%%%%
+%%%%%%******************** %%%%%%%
+
 %% Cases
-   % test = 'Poisson1D 3_1';
-    % test = 'Poisson1D 3_2';
-    test = 'Poisson1D 3_3';
+      TASK = 'Poisson1D 3_1';
+     % TASK = 'Poisson1D 3_2';
+     % TASK = 'Poisson1D 3_3';
 %% Initial Values
 M_h = 10;
 for M = 2:M_h
-    h0 = .1;
+    h0 = 1;
     h = h0/2^M;
-    switch test
+    switch TASK
         case 'Poisson1D 3_1'
             x = 0:h:1;
             u = zeros(length(x)-1,1);
@@ -54,7 +59,7 @@ for M = 2:M_h
             %% Boundary and exact solution
             f = @(x) sin(pi.*x);            
             rhs = f(x);
-            rhs(end) =h^2*rhs(end);
+            rhs(end) = rhs(end);
             exact = @(x) 1./pi^2.*sin(pi.*x) + (pi+1)./(2.*pi).*x;
             u_exact = exact(x);
             boundary = zeros(length(x)-1,1);
@@ -63,13 +68,16 @@ for M = 2:M_h
     %% Solving the problem
             F  = rhs(2:end)'+boundary;
             u = A\F;
+            [u';u_exact(2:end)]
             error(M) = norm(u - u_exact(2:length(x))');
     
 end
 %% Visualization
 m = 1:M_h;
 H = 1./2.^m;
-switch test
+p = polyfit(log10(H),log10(error),1);
+fprintf('Order of Congergence: %.2f \n',p(1))
+switch TASK
     case 'Poisson1D 3_1'
         loglog(H,error,'-*')
     case 'Poisson1D 3_2'
