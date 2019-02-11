@@ -6,8 +6,8 @@ clear
 %%%%%%******************** %%%%%%%
 
 %% Cases
-      TASK = 'Poisson1D 3_1';
-     % TASK = 'Poisson1D 3_2';
+     % TASK = 'Poisson1D 3_1';
+      TASK = 'Poisson1D 3_2';
      % TASK = 'Poisson1D 3_3';
 %% Initial Values
 M_h = 10;
