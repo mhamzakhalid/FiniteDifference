@@ -39,5 +39,5 @@ function plot_solution(x,t,U)
     xlabel('t')
     ylabel('x')
     title('Solution')
-    saveas(gca,'Solution_2.png')
+    %saveas(gca,'Solution_2.png')
 end
