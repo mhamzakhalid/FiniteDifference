@@ -46,13 +46,13 @@ tol = 1e-8;
 %[u, iter,err_symGS] = PCG_SymGS(A,rhs,u0,tol);
 [u,iter,error] = conj_grad(u0,A,rhs,tol);
 u = reshape(u,N-1,N-1)';
-semilogy(error)
+% semilogy(error)
 for i = 1:N-1
     U(i+1,2:N) = u(i,:);
 end
-% mesh(x,y,U)
-% figure
-% contour(U,100)
+mesh(x,y,U)
+figure
+contour(U,100)
 
 % for i=1:101
 % plot(x,U(i,:))
