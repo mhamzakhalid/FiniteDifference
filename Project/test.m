@@ -1,20 +1,19 @@
 clear
 
-%N=44;
-N = 50;
+N = 64;
 n = N+1;
 L = 1 ;
 dy = L/(N-1);
 dx = L/(N-1); %step-length                                                   
 k = sqrt(8/dx^2)+1; %Parameter in Helmotz Equation
-%k = 10;
+%k = 1e2;
 x = linspace(0,L,n);
 y = linspace(0,L,n);
 U = zeros(n);
 for i=1:n
     for j=1:n
-     %    F(i,j)=exp(-50*((x(j) - 1/2)^2))*exp(-50*(y(i) - 1/2)^2);
-          F(i,j) =   20*pi^2*sin(2*pi*x(j)).*cos(4*pi*y(i));
+       %    F(i,j)= -exp(-50*((x(j) - 1/2)^2))*exp(-50*(y(i) - 1/2)^2);
+        F(i,j) =   -20*pi^2*sin(2*pi*x(j)).*cos(4*pi*y(i));
     end 
 end 
 F = dx^2*F;
@@ -31,7 +30,7 @@ g = [1;f(1:end-1)];
 Lap = spdiags([e,f, -4*e, g, e],[-(N-1),-1,0,1,(N-1)],(N-1)*(N-1),(N-1)*(N-1));
 % Setting up A-Matrix 
 A = Lap + dx^2*k^2*eye((N-1)*(N-1));
-A=sparse(A);
+A = sparse(A);
 if eig(A)>0
     %Postive Definite Case
     disp('A is Positive Definite Matrix')
@@ -46,13 +45,13 @@ tol = 1e-8;
 %[u, iter,err_symGS] = PCG_SymGS(A,rhs,u0,tol);
 [u,iter,error] = conj_grad(u0,A,rhs,tol);
 u = reshape(u,N-1,N-1)';
-% semilogy(error)
+ %semilogy(error)
 for i = 1:N-1
     U(i+1,2:N) = u(i,:);
 end
 mesh(x,y,U)
-figure
-contour(U,100)
+% figure
+% contour(U,100)
 
 % for i=1:101
 % plot(x,U(i,:))

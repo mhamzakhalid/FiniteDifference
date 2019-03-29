@@ -1,0 +1,9 @@
+function Ax = matvec(x,N,h,k)
+    Ax = x; 
+    index = 2:N;
+    Ax(index,index) = -(20+k^2*h^2)*x(index,index)+x(index-1,index-1) + x(index+1,index+1)+... 
+                                                   x(index+1,index-1) + x(index-1,index+1)+...
+                                                    4*x(index-1,index) + 4*x(index+1,index)+...
+                                                    4*x(index,index-1) + 4*x(index,index+1);
+end
+        
