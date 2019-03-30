@@ -1,11 +1,13 @@
 clear 
 % close all
-load('Reference_Sol.mat')
+% load('Reference_Sol.mat')
+load('Reference_SolV2.mat')
 %% TASK  
-  task = 'Order2'
-% task = 'Order4'
+ %  task = 'Order2'
+  task = 'Order4'
 %% Initial Values
- for L = 2:6
+ for L = 3:9
+     tic
     N = 2^L;
     h = 1/N;
     x = 0:h:1;
@@ -38,24 +40,28 @@ load('Reference_Sol.mat')
     for pt = 1:length(c)
         e(pt)=U(c(pt),c(pt))-U_ref(d(pt),d(pt)); 
     end
-    err(L-1) = norm(e)*sqrt(h);
+    err(L-2) = norm(e)*sqrt(h);
+    t_end(L-2) = toc;
  end
 
-%% Convergenc Plots
-stp = 2:6;
+%% Convergence Plots
+stp = 3:9;
 dh = 1./(2.^stp);
 p = polyfit(log10(dh),log10(err),1);
 fprintf('Order of Congergence: %.2f \n',p(1))
-loglog(dh,err)
+%% Error
+loglog(dh,err,'-*')
+%% Time 
+% loglog(dh,t_end,'-*')
 xlabel('Step-size')
-ylabel('Error')
+% ylabel('Error')
 grid on
 str = sprintf('Convergence in Space: %.2f',p(1));
 title(str)
 legend(task)
 set(gca, 'FontName', 'Times New Roman')
 %% Iteration Plots
-% semilogy(1:iter,res)
+% semilogy(1:iter,res,'-*')
 % tc = sprintf('Convergence CG for N: %d',N);
 % title(tc)
 % xlabel('Iterations')

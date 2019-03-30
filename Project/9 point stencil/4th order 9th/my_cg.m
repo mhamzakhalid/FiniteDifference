@@ -24,12 +24,14 @@ function  [u,res,iter]=my_cg(task,u0,rhs,N,tol,maxit,k)
                 beta = sum(dot(r,r))/sum(dot(r0,r0));      %beta = (r,r)/(r0,r0)
                 p(id,id) = r(id,id) + beta*p0(id,id);      %p= r + beta*p0
                 Ax = 1/(6*h^2).*matvec(task,x,N,h,k);
-                error = norm(b(id,id) - Ax(id,id))/norm(b(id,id) - Ax0(id,id));
+                error = norm(b(id,id) - Ax(id,id))/norm(b(id,id) - Ax0(id,id))
                 x0 = x;
                 r0 = r;
                 p0 = p;
                 iter = iter + 1;
-                res(iter) = norm(b(id,id) - Ax(id,id));
+%                 res(iter) = norm(b(id,id) - Ax(id,id));
+                res(iter) = error;
+
             end
 
                 u = x;     
@@ -61,7 +63,9 @@ function  [u,res,iter]=my_cg(task,u0,rhs,N,tol,maxit,k)
                     r0 = r;
                     p0 = p;
                     iter = iter + 1;
-                    res(iter) = norm(b(id,id) - Ax(id,id));
+%                     res(iter) = norm(b(id,id) - Ax(id,id));
+                    res(iter) = error;
+
                 end
 
                     u = x; 
