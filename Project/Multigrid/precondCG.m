@@ -33,7 +33,8 @@ function [u res it] = precondCG(u0,rhs,N,tol,maxit,nu1,nu2,X,Y,k)
         p0 = p;
         z0 = z;
         iter = iter + 1;
-        rd(iter) = norm(b(id,id) - Ax(id,id));
+%         rd(iter) = norm(b(id,id) - Ax(id,id));
+        rd(iter) = error;
         
 %         if iter<6
 %                 subplot(2,3,iter+1)

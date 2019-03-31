@@ -1,5 +1,5 @@
-% clear 
-
+clear 
+% close all
 
 %% TASK 1 
  task = 'CG';
@@ -9,7 +9,8 @@
 % task = 'PCG';
 % load('Reference_Sol.mat')
 %% Initial Values
-for L = 2:7;
+% for L = 2:7;
+L = 9;
 N = 2^L;
 h = 1/N;
 x = 0:h:1;
@@ -26,7 +27,7 @@ switch task
     case 'CG'
 %         f = @(x,y) 20*pi^2*sin(2*pi*x).*cos(4*pi*y); %CG
 %         g = @(x,y) sin(2*pi*x).*cos(4*pi*y); %CG
-          f = @(x,y) 20*pi^2*sin(2*pi*x).*cos(4*pi*y); 
+          f = @(x,y) -20*pi^2*sin(2*pi*x).*cos(4*pi*y); 
           g = @(x,y) 0;
 %           f = @(x,y) -1; 
 %           g = @(x,y) 4*y.*(1-y);
@@ -63,9 +64,9 @@ switch task
         max_level = L;
         Au0 = matvec(U,N,h,k);
 
-        subplot(2,3,1) 
-        surf(X,Y,U)
-        title ('Initial guess')
+%         subplot(2,3,1) 
+%         surf(X,Y,U)
+%         title ('Initial guess')
 
         Au0 = 1/h^2.*matvec(U,N,h,k);
        while e>tol  
@@ -74,14 +75,15 @@ switch task
         res(it + 1) = norm(rhs(2:N,2:N) - Au(2:N,2:N));
         e = norm(rhs(2:N,2:N) - Au(2:N,2:N))/norm(rhs(2:N,2:N) - Au0(2:N,2:N));
         it = it +1;
-            if it<6
-                subplot(2,3,it+1)
-                surf(X,Y,U)
-                t = sprintf('V-cycle Iteration:%d',it);
-                title (t)
-            end
-         
+%             if it<6
+%                 subplot(2,3,it+1)
+%                 surf(X,Y,U)
+%                 t = sprintf('V-cycle Iteration:%d',it);
+%                 title (t)
+%             end
+%          
        end
+%        figure
 %        surf(X,Y,U)
 %        figure
        semilogy(res)
@@ -90,7 +92,7 @@ switch task
        xlabel('Iterations')
        ylabel('Residual')
        grid on
-       
+%        
     case 'PCG'
         max_level = L;
         Au0 = matvec(U,N,h,k);
@@ -110,23 +112,23 @@ switch task
        grid on
 end
    
- c=find(ismember(x,x_ref));
-    d=find(ismember(x_ref,x));
-            % Calculating Error
-    for pt = 1:length(c)
-        e(pt)=U(c(pt),c(pt))-U_ref(d(pt),d(pt)); 
-    end
-    err(L-1) = norm(e)*sqrt(h)  ;
- end
-
-stp = 2:7;
-dh = 1./(2.^stp);
-loglog(dh,err)
-xlabel('Step-size')
-ylabel('Error')
-grid on
-title('Convergence in Space')
-set(gca, 'FontName', 'Times New Roman')
-
-p = polyfit(log10(dh),log10(err),1);
-fprintf('Order of Congergence: %.2f \n',p(1))
+%  c=find(ismember(x,x_ref));
+%     d=find(ismember(x_ref,x));
+%             % Calculating Error
+%     for pt = 1:length(c)
+%         e(pt)=U(c(pt),c(pt))-U_ref(d(pt),d(pt)); 
+%     end
+%     err(L-1) = norm(e)*sqrt(h)  ;
+%  end
+% 
+% stp = 2:7;
+% dh = 1./(2.^stp);
+% loglog(dh,err)
+% xlabel('Step-size')
+% ylabel('Error')
+% grid on
+% title('Convergence in Space')
+% set(gca, 'FontName', 'Times New Roman')
+% 
+% p = polyfit(log10(dh),log10(err),1);
+% fprintf('Order of Congergence: %.2f \n',p(1))

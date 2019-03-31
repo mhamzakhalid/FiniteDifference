@@ -1,10 +1,9 @@
 clear 
 % close all
-% load('Reference_Sol.mat')
-load('Reference_SolV2.mat')
+load('Reference_SolV3.mat')
 %% TASK  
- %  task = 'Order2'
-  task = 'Order4'
+    task = 'Order2'
+ %task = 'Order4'
 %% Initial Values
  for L = 3:9
      tic
@@ -13,11 +12,6 @@ load('Reference_SolV2.mat')
     x = 0:h:1;
     tol = 1e-12;
     maxit = 1000;
-    nu1 = 3;
-    nu2 = 3;
-    level = 1;
-    e = 1.;
-    it = 0;
     k = sqrt(8/h^2)+1;
 %% Programs
     f = @(x,y) 20*pi^2*sin(2*pi*x).*cos(4*pi*y); 
@@ -42,29 +36,40 @@ load('Reference_SolV2.mat')
     end
     err(L-2) = norm(e)*sqrt(h);
     t_end(L-2) = toc;
+    if L==6
+        mesh(X,Y,U)
+        axis off
+    end
  end
 
 %% Convergence Plots
+figure
 stp = 3:9;
 dh = 1./(2.^stp);
 p = polyfit(log10(dh),log10(err),1);
 fprintf('Order of Congergence: %.2f \n',p(1))
 %% Error
 loglog(dh,err,'-*')
-%% Time 
-% loglog(dh,t_end,'-*')
 xlabel('Step-size')
-% ylabel('Error')
+ylabel('Error')
 grid on
 str = sprintf('Convergence in Space: %.2f',p(1));
 title(str)
 legend(task)
-set(gca, 'FontName', 'Times New Roman')
+%% Time 
+figure
+loglog(dh,t_end,'-*')
+xlabel('Step-size')
+ylabel('CPU Time')
+grid on
 %% Iteration Plots
-% semilogy(1:iter,res,'-*')
-% tc = sprintf('Convergence CG for N: %d',N);
-% title(tc)
-% xlabel('Iterations')
-% ylabel('Residual')
-% grid on
+figure
+semilogy(1:iter,res,'-*')
+tc = sprintf('Convergence CG for N: %d',N);
+title(tc)
+xlabel('Iterations')
+ylabel('Error')
+grid on
+set(gca, 'FontName', 'Times New Roman')
+
 

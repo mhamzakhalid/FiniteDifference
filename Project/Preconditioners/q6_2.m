@@ -1,7 +1,7 @@
 clear
 clf
 %N=44;
-N=64;
+N=512;
 dy=1/(N-1);
 dx=1/(N-1); %step-length                                                   %Is dx step or some other factor as from question?
 k=sqrt(8/dx^2)+1; %Parameter in Helmotz Equation
@@ -11,9 +11,8 @@ y=0:dy:1;
 
 for i=1:N
     for j=1:N
-        F(i,j)= exp(-50*((x(j) - 1/2)^2))*exp(-50*(y(i) - 1/2)^2);
-%         20*pi^2*sin(2*pi*x(j)).*cos(4*pi*y(i)); 
-%         exp(-50*((x(j) - 1/2)^2))*exp(-50*(y(i) - 1/2)^2);
+%         F(i,j)= exp(-50*((x(j) - 1/2)^2))*exp(-50*(y(i) - 1/2)^2);
+       F(i,j)= 20*pi^2*sin(2*pi*x(j)).*cos(4*pi*y(i)); 
     end 
 end 
 F = reshape(F,[N*N,1]);  % Right Hand side

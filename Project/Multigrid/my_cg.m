@@ -27,7 +27,8 @@ function  [u,res,iter]=my_cg(u0,rhs,N,tol,maxit,k)
         r0 = r;
         p0 = p;
         iter = iter + 1;
-        res(iter) = norm(b(id,id) - Ax(id,id));
+%         res(iter) = norm(b(id,id) - Ax(id,id));
+        res(iter) = error;
     end
     
     u = x;     
